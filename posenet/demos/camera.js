@@ -434,6 +434,9 @@ function detectPoseInRealTime(video, net) {
         if (guiState.output.showBoundingBox) {
           drawBoundingBox(keypoints, ctx);
         }
+        if(keypoints[9].position.x > keypoints[10].position.x){
+          console.log("Crossed up");
+        }
       }
     });
 
