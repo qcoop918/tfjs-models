@@ -97,13 +97,13 @@ export function drawSegment([ay, ax], [by, bx], color, scale, ctx) {
 /**
  * Draws a pose skeleton by looking up all adjacent keypoints/joints
  */
-export function drawSkeleton(keypoints, minConfidence, ctx, scale = 1) {
+export function drawSkeleton(keypoints, minConfidence, ctx, skeletonColor, scale = 1) {
   const adjacentKeyPoints =
       posenet.getAdjacentKeyPoints(keypoints, minConfidence);
 
   adjacentKeyPoints.forEach((keypoints) => {
     drawSegment(
-        toTuple(keypoints[0].position), toTuple(keypoints[1].position), color,
+        toTuple(keypoints[0].position), toTuple(keypoints[1].position), skeletonColor,
         scale, ctx);
   });
 }

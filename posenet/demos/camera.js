@@ -424,18 +424,26 @@ function detectPoseInRealTime(video, net) {
     // and draw the resulting skeleton and keypoints if over certain confidence
     // scores
     poses.forEach(({score, keypoints}) => {
+      let color = 'aqua';
+      let kneeY = Math.pow((keypoints[6].position.y - keypoints[14].position.y),2)
+      let kneeX = Math.pow((keypoints[6].position.x - keypoints[14].position.x),2)
+      let distance = Math.sqrt(kneeY + kneeX) 
+      let degree = Math.pow(Math.cos(kneeX/distance), -1)*(180/Math.PI)
       if (score >= minPoseConfidence) {
         if (guiState.output.showPoints) {
           drawKeypoints(keypoints, minPartConfidence, ctx);
         }
+        if(degree<45){
+          console.log("FALLEN");
+          console.log(keypoints);
+          console.log(degree);
+          color = 'red';
+        }
         if (guiState.output.showSkeleton) {
-          drawSkeleton(keypoints, minPartConfidence, ctx);
+          drawSkeleton(keypoints, minPartConfidence, ctx, color);
         }
         if (guiState.output.showBoundingBox) {
           drawBoundingBox(keypoints, ctx);
-        }
-        if(keypoints[9].position.x > keypoints[10].position.x){
-          console.log("Crossed up");
         }
       }
     });
