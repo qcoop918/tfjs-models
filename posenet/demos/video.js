@@ -9,7 +9,12 @@ download.addEventListener('click', () => {
     let file = "data:text/csv;charset=utf-8," + csv.map((c) => {
         let line = "";
         c.forEach(e => {
-            line += `${e.score}, ${e.position.x}, ${e.position.y},`
+            if(e.score > 0.15){
+            line += `${e.position.x/1920}, ${e.position.y/1080},`
+            }
+            else{
+                line += `${0}, ${0},`
+            }
         });
         return line
     }).join("\n");
