@@ -8,14 +8,18 @@ button.addEventListener('click', () => video.paused ? video.play() : video.pause
 download.addEventListener('click', () => {
     let file = "data:text/csv;charset=utf-8," + csv.map((c) => {
         let line = "";
-        c.forEach(e => {
-            if(e.score > 0.15){
-            line += `${e.position.x/1920}, ${e.position.y/1080},`
+        let i
+        for(i=0; i<c.length; i++) {
+            if(c[i].score > 0.15){
+                line += `${c[i].position.x/1920},${c[i].position.y/1080}`
             }
             else{
-                line += `${0}, ${0},`
+                line += `${0},${0}`
             }
-        });
+            if(i < c.length - 1){
+                line += (",")
+            }
+        }
         return line
     }).join("\n");
     var encodedUri = encodeURI(file);
