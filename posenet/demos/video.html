@@ -1,8 +1,19 @@
-<div id="frames"></div>
-<a id="labels">Download Labels</a>
-<a id="download">Download CSV</a>
-<button id="results">results</button>
 <video id="video" width="1920" height="1080" muted>
     <source src=".\Fall detection source videos\Quinn weird walk.mp4" type="video/mp4">
 </video>
-<script src="video.js"></script>
+<div class="container" style="flex: 1; display:inline-block; vertical-align:top">
+    <div class="framesContainer">Frames:
+        <div id="frames"></div>
+    </div>
+    <div class="labelContainer">Labelling:
+        <div id="labellingField">false</div>
+    </div>
+    <div id="fall"></div>
+    <button id="labelling">Start/Stop labelling</button>
+    <button id="results">Display Results in Console</button>
+    <div class="linkContainer">
+        <a id="labels">Download Labels</a>
+        <a id="download">Download Dataset</a>
+    </div>
+    <script src="video.js"></script>
+</div>

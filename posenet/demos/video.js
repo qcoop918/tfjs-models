@@ -4,25 +4,37 @@ const button = document.querySelector("#labels");
 const download = document.querySelector("#download");
 const results = document.querySelector('#results');
 const video = document.getElementById('video');
-const processed = false;
-const csv = [];
+const labelButton = document.getElementById('labelling');
+let labelling = false;
+const labels = [];
+const coordinates = [];
 const boxArray = [];
 let frames = 1;
+labelButton.addEventListener('click', () => {
+    if(labelling){
+        labelling = false;
+    }
+    else{
+        labelling = true;
+    }
+    document.getElementById("labellingField").innerText = labelling;
+});
 results.addEventListener('click', () => {
-    console.log(csv);
+    console.log(coordinates);
     console.log(boxArray);
-    console.log(processed);
+    console.log(labelling);
+    console.log(labels);
 });
 button.addEventListener('click', () => {
-    let file = "data:text/csv;charset=utf-8," + csv.map((c, index) => {
-        return "0"
+    let file = "data:text/csv;charset=utf-8," + labels.map((l, index) => {
+        return l;
     }).join("\n");
     var encodedUri = encodeURI(file);
     button.setAttribute("href", encodedUri);
     button.setAttribute("download", "labels.csv");
 });
 download.addEventListener('click', () => {
-    let file = "data:text/csv;charset=utf-8," + csv.map((c, index) => {
+    let file = "data:text/csv;charset=utf-8," + coordinates.map((c, index) => {
         let line = "";
         let person = false;
         for (let b of boxArray[index]) {
@@ -58,13 +70,11 @@ async function load() {
     const myYolo = await yolo.v3();
     startProcess(net, myYolo);
 }
-
 const startProcess = (net, myYolo) => {
 
     //hides button until models are loaded
     if (myYolo && net) {
         video.play();
-        video.controls = true;
     }
 
     async function estimateMultiplePosesOnImage(imageElement) {
@@ -85,6 +95,7 @@ const startProcess = (net, myYolo) => {
     }
 
     async function run() {
+        //pauses video until frame is processed
         video.pause()
         document.getElementById("frames").innerText = frames;
         frames++;
@@ -95,60 +106,68 @@ const startProcess = (net, myYolo) => {
         const poses = estimateMultiplePosesOnImage(imageElement);
         const result = await poses.then(result => result);
         if (result.length < 1) {
-            result.push({keypoints: [{
-                score: 0,
-                position: { x: 0, y: 0 },
-            }, {
-                score: 0,
-                position: { x: 0, y: 0 },
-            }, {
-                score: 0,
-                position: { x: 0, y: 0 },
-            }, {
-                score: 0,
-                position: { x: 0, y: 0 },
-            }, {
-                score: 0,
-                position: { x: 0, y: 0 },
-            }, {
-                score: 0,
-                position: { x: 0, y: 0 },
-            }, {
-                score: 0,
-                position: { x: 0, y: 0 },
-            }, {
-                score: 0,
-                position: { x: 0, y: 0 },
-            }, {
-                score: 0,
-                position: { x: 0, y: 0 },
-            }, {
-                score: 0,
-                position: { x: 0, y: 0 },
-            }, {
-                score: 0,
-                position: { x: 0, y: 0 },
-            }, {
-                score: 0,
-                position: { x: 0, y: 0 },
-            }, {
-                score: 0,
-                position: { x: 0, y: 0 },
-            }, {
-                score: 0,
-                position: { x: 0, y: 0 },
-            }, {
-                score: 0,
-                position: { x: 0, y: 0 },
-            }, {
-                score: 0,
-                position: { x: 0, y: 0 },
-            }, {
-                score: 0,
-                position: { x: 0, y: 0 },
-            }]})
+            result.push({
+                keypoints: [{
+                    score: 0,
+                    position: { x: 0, y: 0 },
+                }, {
+                    score: 0,
+                    position: { x: 0, y: 0 },
+                }, {
+                    score: 0,
+                    position: { x: 0, y: 0 },
+                }, {
+                    score: 0,
+                    position: { x: 0, y: 0 },
+                }, {
+                    score: 0,
+                    position: { x: 0, y: 0 },
+                }, {
+                    score: 0,
+                    position: { x: 0, y: 0 },
+                }, {
+                    score: 0,
+                    position: { x: 0, y: 0 },
+                }, {
+                    score: 0,
+                    position: { x: 0, y: 0 },
+                }, {
+                    score: 0,
+                    position: { x: 0, y: 0 },
+                }, {
+                    score: 0,
+                    position: { x: 0, y: 0 },
+                }, {
+                    score: 0,
+                    position: { x: 0, y: 0 },
+                }, {
+                    score: 0,
+                    position: { x: 0, y: 0 },
+                }, {
+                    score: 0,
+                    position: { x: 0, y: 0 },
+                }, {
+                    score: 0,
+                    position: { x: 0, y: 0 },
+                }, {
+                    score: 0,
+                    position: { x: 0, y: 0 },
+                }, {
+                    score: 0,
+                    position: { x: 0, y: 0 },
+                }, {
+                    score: 0,
+                    position: { x: 0, y: 0 },
+                }]
+            })
         }
-        csv.push(result[0].keypoints);
+        coordinates.push(result[0].keypoints);
+        if(labelling){
+            labels.push(1);
+        }
+        else{
+            labels.push(0);
+        }
         video.play()
         video.requestVideoFrameCallback(run);
     }
